@@ -1,0 +1,81 @@
+
+
+.container {
+    height: 90vh;
+    weight: 90vw;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+}
+
+.kid-status-none {
+    width: 300px;
+    display: none;
+}
+
+.kid-status-dwight {
+    background-image: url(./star_wars.png);
+    background-size: 100% 100%;
+}
+
+.kid-status-madeleine {
+    background-image: url(./frozen.jpg);
+    background-size: 100% 100%;
+}
+
+.kid-status-coco {
+    background-image: url(./anna.webp);
+    background-size: 100% 100%;
+}
+
+.fun1 {
+background-color: red;
+}
+
+.fun2 {
+    background-color: orange;
+}
+.fun3 {
+    background-color: blue;
+}
+.fun4 {
+    background-color: pink;
+}
+.fun5 {
+    background-color: yellow
+}
+.fun6 {
+    background-color: purple;
+}
+.fun7 {
+    background-color: magenta;
+}
+
+.fun8 {
+    background-color: lightgreen;
+}
+.fun9 {
+    background-color: #020c38;
+}
+
+#dwight {
+    bottom: 100;
+    left: 100;
+    color: #4bdba9;
+    background-color: #020c38
+
+}
+
+#madeleine{
+    background-color: lightskyblue;
+    color: white;
+    bottom: 300;
+    left: 300;
+}
+
+#coco{
+    background-color: red;
+    color: pink;
+    bottom: 100;
+    left: 300;
+}
