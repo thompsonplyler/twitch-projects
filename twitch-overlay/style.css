@@ -34,7 +34,7 @@ main {
     padding: 10px 20px;
 }
 
-.thing {
+.pet-pet1, .pet-pet2{
     position: absolute;
     height: 400;
     width: 800;
@@ -49,4 +49,57 @@ main {
     padding-top: 5px;
     padding-bottom: 5px;
     box-shadow: 2px 2px 2px 2px black;
+}
+
+.sc6-beg, .pf2-announcement {
+    background-image: url("assets/images/3042657-box_sc6.png");
+    position: absolute;
+    width: 267px;
+    height: 320px;
+    background-size: 100%;
+    top: 100px;
+    right: 0px;
+    border-style: solid;
+    border-width: 5px;
+    border-color: #01a9ff;
+    color: white;
+    font-size: 28px;
+    font-family: 'Bebas Neue', cursive;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 75px;
+    padding-bottom: 20px;
+    text-shadow: 2px 2px 8px black;
+    /* box-shadow: 3px 3px 3px 3px black; */
+    text-align: end;
+    text-justify: auto;
+    align-content: flex-end;
+    display: flex;
+}
+
+.pf2-announcement {
+    font-size: 25px;
+    background-image: url('assets/images/pf2.jpg');
+}
+
+.variety-announcement1, .variety-announcement2 {
+    position: absolute;
+    height: 400;
+    width: 800;
+    top: 100px;
+    left: 0px;
+    background-color: #d10919;
+    color: white;
+    font-size: 60px;
+    font-family: 'Bebas Neue', cursive;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    box-shadow: 2px 2px 2px 2px black;
+}
+
+.affiliate {
+    color: purple;
+    text-shadow: 2px 2px 3px white
 }
