@@ -1,4 +1,8 @@
 @import url('https://fonts.googleapis.com/css?family=Bebas+Neue&display=swap');
+@font-face {
+    font-family: "Detective Inc";
+    src: url('detectivesinc.ttf')
+}
 
 *, *:before, *:after {
     margin: 0;
@@ -52,17 +56,16 @@ main {
 }
 #moment {
     position: absolute;
-    height: 400;
-    width: 800;
-    bottom: 100px;
-    left: 0px;
-    background-color: #01a9ff;
+    width: 1920px;
+    height: 1080px;
     color: white;
-    font-size: 60px;
-    font-family: 'Bebas Neue', cursive;
+    top: 7.5%;
+    left: 7.5%;
+    font-size: 350px;
+    font-family: 'Detective Inc';
     padding-left: 20px;
     padding-right: 20px;
     padding-top: 5px;
     padding-bottom: 5px;
-    box-shadow: 2px 2px 2px 2px black;
+    text-shadow: 2px 2px 5px black;
 }

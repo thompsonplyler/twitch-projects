@@ -34,7 +34,7 @@ main {
     padding: 10px 20px;
 }
 
-.pet-pet1, .pet-pet2{
+.pet-pet1, .pet-pet2, .pet-pet3 {
     position: absolute;
     height: 400;
     width: 800;
@@ -54,8 +54,8 @@ main {
 .sc6-beg, .pf2-announcement {
     background-image: url("assets/images/3042657-box_sc6.png");
     position: absolute;
-    width: 267px;
-    height: 320px;
+    width: 355px;
+    height: 425px;
     background-size: 100%;
     top: 100px;
     right: 0px;
@@ -78,7 +78,7 @@ main {
 }
 
 .pf2-announcement {
-    font-size: 25px;
+    font-size: 35px;
     background-image: url('assets/images/pf2.jpg');
 }
 
@@ -86,7 +86,7 @@ main {
     position: absolute;
     height: 400;
     width: 800;
-    top: 100px;
+    top: 0px;
     left: 0px;
     background-color: #d10919;
     color: white;
