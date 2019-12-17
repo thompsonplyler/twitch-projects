@@ -1,7 +1,8 @@
 const sc6Words = document.getElementById("sc6-words")
 const pf2Words = document.getElementById("pf2-words")
 sc6Words.innerText = `If you're into SoulCalibur 6,\n let me know,\ngive me a follow,\n and let's play in between rounds of League!`
-pf2Words.innerText = `Wednesday nights I stream Pathfinder.\n\n It's like D&D, but even nerdier.\n\n 8pm after normal stream, usually.`
+// pf2Words.innerText = `Wednesday nights I stream Pathfinder.\n\n It's like D&D, but even nerdier.\n\n 8pm after normal stream, usually.`
+pf2Words.innerText = `I usually stream Pathfinder on Wed nights.\nBut not tomorrow. \n It's like D&D, but even nerdier.\n 8pm after normal stream, usually.`
 const minutes = 60
 
 tl = new TimelineLite({ repeat: -1, repeatDelay: minutes * 3 })
@@ -25,7 +26,7 @@ tl2.to(".sc6-beg", 1, { x: 4500 }, "+=5")
 tl4 = new TimelineLite({ repeat: -1, repeatDelay: minutes * 10 })
 tl4.set(".pf2-announcement", { x: 4500 })
 tl4.to(".pf2-announcement", 1, { x: 0 })
-tl4.to(".pf2-announcement", 1, { x: 4500 }, "+=5")
+tl4.to(".pf2-announcement", 1, { x: 4500 }, "+=7")
 
 tl3 = new TimelineLite({ repeat: -1, repeatDelay: minutes * 8 })
 tl3.set(".variety-announcement1", { x: -4500 })
