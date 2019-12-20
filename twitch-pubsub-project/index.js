@@ -24,7 +24,10 @@ client.on('connected', (address, port) => {
     client.action('gamemasterthompson', 'Hello, PubSubBot is now connected.')
 })
     // interpret incoming messages
-    .on('message', (channel, tags, message, self) => {
+    .on('message', (channel, userstate, message, self) => {
+
+        console.log("This is the message:", JSON.stringify(userstate))
+        
         // look for command
         if (message.charAt(0) === "!") {
             // look for timer command
@@ -33,6 +36,12 @@ client.on('connected', (address, port) => {
                 const secondArgument = message.split(' ')[2]
                 console.log(`!timer command executed: Command: ${message.split(' ')[0]} Region: ${firstArgument} SummonerName: ${secondArgument}`)
                 timerCommand(firstArgument, secondArgument, message, channel);
+            }
+            if (message.split(' ')[0] === "!today"){
+                const firstArgument = message.split(' ')[1]
+                const secondArgument = message.split(' ')[2]
+                console.log(`!today command executed: Command: ${message.split(' ')[0]} Region: ${firstArgument} SummonerName: ${secondArgument}`)
+                todayCommand(firstArgument, secondArgument, message, channel);
             }
         }
         if (self) return;
@@ -79,8 +88,29 @@ client.on('connected', (address, port) => {
         }
       };
 
+      const todayCommand = (region, argument, receivedMessage, channel) => {
+        argument = encodeURIComponent(argument);
+      
+        if (argument.length > 0) {
+          fetch(`http://localhost:3001/api/v1/today/?summoner_name=${argument}&region=${region}`, {
+            method: 'POST'
+          })
+            .then(r => r.json())
+            // .then(r=> console.log(r))
+            .then(response => {
+              argument = decodeURIComponent(argument);
+              todayResponseHandler(response, receivedMessage, argument, channel);
+              
+            }
+            )
+            .catch(error=>console.log('This is the error you received: ' + error));
+          
+        } else {
+          client.say(channel, `I've received the timer command, but your parameters made no sense. Syntax is: "!timer <region> <summonername>`);
+        }
+      };
+
       const responseHandler = (data, receivedMessage, argument, channel) => {
-  
         if (data.grand_total_time === '00 hours 00 minutes and 00 seconds') {
           client.say(channel, `**Weekly Results for Summoner:** ${argument}\nThis summoner hasn't played any games this week.`);
         } else{
@@ -90,9 +120,21 @@ client.on('connected', (address, port) => {
           );
         }
       };
+
+      const todayResponseHandler = (data, receivedMessage, argument, channel) => {
+        if (data.grand_total_time == '00 hours 00 minutes and 00 seconds') {
+          client.say(channel, `Today's Results for ${argument}: This summoner hasn't played any games today.`);
+        } else{
+            if (argument.toLowerCase() == "deusrektmachina"){
+                argument = "gamema24Gmtoorah1" 
+            } 
+          client.say(channel,
+            `${argument} has played for ${data.grand_total_time} today and won ${winCount(data.grand_total_results)}% of ${data.grand_total_results.length} games played.`
+          );
+        }
+      };
       
       const handleToday = (data) => {
-        console.log(data.today.total_time);
         if (data.today.total_time === '00 hours 00 minutes and 00 seconds') {
           return '**Today:** No games played.';
         } else {
