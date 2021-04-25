@@ -4,8 +4,10 @@
 			"path": "G:\\code\\projects\\twitch-projects"
 		},
 		{
-			"path": "G:\\code\\projects\\discord-lol-procrastileague"
+			"path": "G:\\code\\zenva"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "twitch-projects"
+	}
 }

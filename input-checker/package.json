@@ -11,8 +11,8 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "global-keys": "^1.0.3",
     "input-event": "^1.2.6",
-    "iohook": "^0.6.2",
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^2.6.1"
   }
 }

@@ -1,18 +1,26 @@
-const ioHook = require('iohook');
 const express = require('express');
 const app = express();
 const cors = require('cors');
 const port = 3000;
+const keys = require ('global-keys')
+let tabState = {tab:false}
+
+const keyStream = new keys.KeyStream();
 
 
 const counters = { q: 0 };
 app.use(cors())
-
-
-ioHook.on("keypress", event => {
-    if (event.rawcode == 81) {
+keyStream.on('data',state=>{
+    if (String(state)=="9"){
+        tabState={tabState: !tabState.tabState}
+        console.log("You pressed Tab!")
+        console.log("Tab state is now: ", tabState)
+    }
+    if (String(state)=="81"){
         counters["q"]++
     }
+    
+    
 })
 
 
@@ -21,8 +29,10 @@ app.get("/counters", (req, res) => {
     res.end();
 })
 
+app.get("/tabstate", (req, res) => {
+    res.send(JSON.stringify(tabState));
+    res.end();
+})
 
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
-
-ioHook.start();

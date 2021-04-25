@@ -1,0 +1,11 @@
+#banner {
+    display: flex;
+    justify-content: center;
+    align-content: flex-start;
+    padding-top: 47px;
+    left: 45px;
+}
+
+img {
+    height: 60px;
+}

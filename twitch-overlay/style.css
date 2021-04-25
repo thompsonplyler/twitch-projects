@@ -38,7 +38,7 @@ main {
     position: absolute;
     height: 400;
     width: 800;
-    bottom: 100px;
+    bottom: 0px;
     left: 0px;
     background-color: #01a9ff;
     color: white;
@@ -102,4 +102,17 @@ main {
 .affiliate {
     color: purple;
     text-shadow: 2px 2px 3px white
+}
+
+.lol-day-record {
+    position: absolute;
+    height: 400;
+    width: 800;
+    top: 90px;
+    right: 500px;
+    /* background-color: #01a9ff; */
+    color: white;
+    font-size: 60px;
+    font-family: 'Bebas Neue', cursive;
+    text-shadow: 2px 2px 2px black
 }

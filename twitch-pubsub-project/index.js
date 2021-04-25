@@ -125,7 +125,7 @@ const todayCommand = (region, argument, receivedMessage, channel) => {
 //https://fresh-under-one-sky-email-api.herokuapp.com/
     if (argument.length > 0) {
         client.say(channel, "...I have received your request and am processing it...")
-        fetch(`http://localhost:3001/api/v1/today/?summoner_name=${argument}&region=${region}`, {
+        fetch(`http://fresh-under-one-sky-email-api.herokuapp.com/api/v1/today/?summoner_name=${argument}&region=${region}`, {
             method: 'POST'
         })
             .then(r => r.text())
@@ -186,57 +186,6 @@ const handleToday = (data) => {
         return '**Today:** No games played.';
     } else {
         return `**Today:** Played for ${data.today.total_time} -- Won ${winCount(data.today.results)}% of total games played.`;
-    }
-};
-
-const handleYesterday = (data) => {
-    if (data.minus_one.total_time === '00 hours 00 minutes and 00 seconds') {
-        return '**Yesterday:** No games played.';
-    } else {
-        return `**Yesterday:** ${data.minus_one.total_time} -- Won ${winCount(data.minus_one.results)}% of total games played.`;
-    }
-};
-
-const handleMinusTwo = (data) => {
-    if (data.minus_two.total_time === '00 hours 00 minutes and 00 seconds') {
-        return `**${momentCommand(-2)}:** No games played.`;
-    } else {
-        return `**${momentCommand(-2)}:** ${data.minus_two.total_time} -- Won ${winCount(data.minus_two.results)}% of total games played`;
-    }
-
-};
-
-const handleMinusThree = (data) => {
-    if (data.minus_three.total_time === '00 hours 00 minutes and 00 seconds') {
-        return `**${momentCommand(-3)}:** No games played.`;
-    } else {
-        return `**${momentCommand(-3)}:** ${data.minus_three.total_time} -- Won ${winCount(data.minus_three.results)}% of total games played`;
-    }
-};
-
-const handleMinusFour = (data) => {
-    if (data.minus_four.total_time === '00 hours 00 minutes and 00 seconds') {
-        return `**${momentCommand(-4)}:** No games played.`;
-    } else {
-        return `**${momentCommand(-4)}:** ${data.minus_four.total_time} -- Won ${winCount(data.minus_four.results)}% of total games played`;
-    }
-
-};
-
-const handleMinusFive = (data) => {
-    if (data.minus_five.total_time === '00 hours 00 minutes and 00 seconds') {
-        return `**${momentCommand(-5)}:** No games played.`;
-    } else {
-        return `**${momentCommand(-5)}:** ${data.minus_five.total_time} -- Won ${winCount(data.minus_five.results)}% of total games played`;
-    }
-
-};
-
-const handleMinusSix = (data) => {
-    if (data.minus_six.total_time === '00 hours 00 minutes and 00 seconds') {
-        return `**${momentCommand(-6)}:** No games played.`;
-    } else {
-        return `**${momentCommand(-6)}:** ${data.minus_six.total_time} -- Won ${winCount(data.minus_six.results)}% of total games played`;
     }
 };
 
