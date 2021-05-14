@@ -1,0 +1,13 @@
+.hidden-video {
+    display: none
+}
+
+h1 {
+    color: red;
+}
+.shown-video {
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+

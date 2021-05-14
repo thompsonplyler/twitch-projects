@@ -1,4 +1,4 @@
-require('dotenv').config()
+require('dotenv').config({path: __dirname + '/.env'})
 const tmi = require('tmi.js')
 const fetch = require('node-fetch')
 const moment = require('moment');
@@ -19,10 +19,12 @@ const options = {
     },
     identity: {
         username: 'PubSubBot',
-        password: process.env.PUBSUBPASSWORD
+        password: `${process.env.PUBSUBPASSWORD}`
     },
     channels: ['gamemasterthompson']
 }
+
+
 
 let goldState = true
 
@@ -43,19 +45,35 @@ client.on('connected', (address, port) => {
         console.log("This is the message:", `
         
         
-        ${JSON.stringify(userstate["custom-reward-id"])}
+        ${JSON.stringify(userstate)}
         
         
         
         `)
-        let rewardNum = "09083718-497b-4c63-ac42-0d17f8f584e8"
+        let goldrewardNum = "09083718-497b-4c63-ac42-0d17f8f584e8"
+        let noTop01RewardNum = "6c153086-4423-44f9-9aff-0420d7097ce5"
+        let pureSkillRewardNum = "d4ac0590-b62c-48f0-9d57-ba4964f35d22"
 
-        if(userstate["custom-reward-id"]==rewardNum){
-            console.log(`Ya made it: ${rewardNum}`)
+        if(userstate["custom-reward-id"]==goldrewardNum){
+            console.log(`Ya made it: ${goldrewardNum}`)
             if (goldState){
                 goldSpend()
                 }
             }
+
+        if(userstate["custom-reward-id"]==noTop01RewardNum){
+            console.log(`Ya made it: ${noTop01RewardNum}`)
+                noTopEmit()
+            }
+
+            if(userstate["custom-reward-id"]==pureSkillRewardNum){
+                console.log(`Ya made it: ${pureSkillRewardNum}`)
+                    pureSkillEmit()
+                }
+
+            
+
+            
 
         objMessage.messageBody = message
         objMessage.userState = userstate
@@ -71,6 +89,11 @@ client.on('connected', (address, port) => {
                 const secondArgument = message.split(' ')[2]
                 console.log(`!today command executed: Command: ${message.split(' ')[0]} Region: ${firstArgument} SummonerName: ${secondArgument}`)
                 todayCommand(firstArgument, secondArgument, message, channel);
+            }
+
+            if (message.split(' ')[0] === "!rank") {
+                console.log(`!rank command executed`)
+                rankCommand(message, channel);
             }
             
             // if (message.split(' ')[0]=== "!spendyourgold"){
@@ -119,6 +142,18 @@ client.on('connected', (address, port) => {
         
         `)
     })
+    .on('cheer',(channel, userstate, message)=>{
+        console.log(`
+        
+
+        You have received a cheer! Here are the incoming data objects:
+        Username: ${userstate}
+
+        Channel: ${channel}
+
+        Message: ${message}
+        `)
+    })
 
 const todayCommand = (region, argument, receivedMessage, channel) => {
     argument = encodeURIComponent(argument);
@@ -155,6 +190,37 @@ const todayCommand = (region, argument, receivedMessage, channel) => {
     }
 };
 
+
+
+const rankResponseHandler = (response) => {
+    let parsedResponse = JSON.parse(response)
+    const { summonerName, tier, rank, leaguePoints } = parsedResponse
+    let stringResponse = `Thompson is currently ${tier} ${rank} with ${leaguePoints} LP.`
+    console.log(stringResponse)
+    return stringResponse
+}
+
+const rankCommand = (message,channel) => {
+    fetch(`http://localhost:3001/api/v1/rank_lol/?summoner_name=EveOnlyFans&region=na`, {
+        method: 'POST'
+    })
+        .then(r => r.text())
+        // .then(r=> console.log(r))
+        .then(response => {
+            response.replace(`"`,``).replace("[","").replace("]","")
+            
+            let stringResponse = rankResponseHandler(response)
+            client.say(channel, stringResponse)
+            // argument = decodeURIComponent(argument);
+            // todayResponseHandler(response, receivedMessage, argument, channel);
+
+        }
+        )
+        .catch(error => {
+            console.log('This is the error you received: ' + error)
+            client.say(channel, "I've received your command but the server returned an error.")
+    });
+};
 
 
 const todayResponseHandler = (data, receivedMessage, argument, channel) => {
@@ -199,6 +265,16 @@ const socket = io('http://localhost:3000');
 // function to respond to !spendyourgold
 const goldSpend = () => {
     socket.emit('gold')
+    // resetGold()
+}
+
+const noTopEmit = () => {
+    socket.emit('notop')
+    // resetGold()
+}
+
+const pureSkillEmit = () => {
+    socket.emit('pureskill')
     // resetGold()
 }
 

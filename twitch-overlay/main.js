@@ -87,7 +87,7 @@ fetcher()
 
 
 const resultLogger = () => {
-        win.innerHTML=winTotal-1
+        win.innerHTML=winTotal
         loss.innerHTML=lossTotal
 }
 

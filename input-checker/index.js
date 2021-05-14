@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const port = 3000;
+const port = 3003;
 const keys = require ('global-keys')
 let tabState = {tab:false}
 
@@ -11,11 +11,6 @@ const keyStream = new keys.KeyStream();
 const counters = { q: 0 };
 app.use(cors())
 keyStream.on('data',state=>{
-    if (String(state)=="9"){
-        tabState={tabState: !tabState.tabState}
-        console.log("You pressed Tab!")
-        console.log("Tab state is now: ", tabState)
-    }
     if (String(state)=="81"){
         counters["q"]++
     }

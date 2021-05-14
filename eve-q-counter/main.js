@@ -1,7 +1,7 @@
 const counter = document.getElementById("counter")
 
 setInterval(function () {
-    fetch("http://localhost:3000/counters/", {
+    fetch("http://localhost:3003/counters/", {
         mode: 'cors',
         headers: {
             "Access-Control-Allow-Origin": "*"
