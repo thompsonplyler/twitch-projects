@@ -9,14 +9,13 @@ const keyStream = new keys.KeyStream();
 
 
 const counters = { q: 0 };
+
 app.use(cors())
 keyStream.on('data',state=>{
-    if (String(state)=="81"){
+
+    if (state.includes(81)){
         counters["q"]++
-    }
-    
-    
-})
+}})
 
 
 app.get("/counters", (req, res) => {

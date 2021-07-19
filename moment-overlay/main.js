@@ -3,7 +3,7 @@ const getDuration = () => {
 
 
     const now = moment().unix()
-    const deadline = moment().clone().hour(10).minute(0).second(0).unix();
+    const deadline = moment().clone().hour(13).minute(15).second(0).unix();
 
 
     const difference = deadline - now;

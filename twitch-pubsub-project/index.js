@@ -27,6 +27,9 @@ const options = {
 
 
 let goldState = true
+let giveAwayEntriesArray = []
+let giveAwayActive = false
+let userExpenditures = {}
 
 app.use(cors())
 
@@ -37,22 +40,26 @@ const client = new tmi.Client(options)
 client.connect();
 // verify connection
 client.on('connected', (address, port) => {
-    client.action('gamemasterthompson', 'Hello, PubSubBot is now connected.')
+    // client.action('gamemasterthompson', 'Hello, PubSubBot is now connected.')
 })
     // interpret incoming messages
     .on('message', (channel, userstate, message, self) => {
 
-        console.log("This is the message:", `
+        // console.log("This is the message:", `
         
         
-        ${JSON.stringify(userstate)}
+        // ${JSON.stringify(userstate)}
         
         
         
-        `)
+        // `)
         let goldrewardNum = "09083718-497b-4c63-ac42-0d17f8f584e8"
         let noTop01RewardNum = "6c153086-4423-44f9-9aff-0420d7097ce5"
         let pureSkillRewardNum = "d4ac0590-b62c-48f0-9d57-ba4964f35d22"
+        let youNeededMe = "c7ae41be-e924-4839-9589-f0e95545317b"
+        let lurkerRewardNum = "00eeb6aa-e4cc-4395-9027-ac5c981a6441"
+        let potionRewardNum = "e900e6de-5787-4f90-9520-99d44a6dc508"
+        let gpRewardNum = "be6c7225-8487-44cd-8cfd-d0d1312f5e86"
 
         if(userstate["custom-reward-id"]==goldrewardNum){
             console.log(`Ya made it: ${goldrewardNum}`)
@@ -66,27 +73,59 @@ client.on('connected', (address, port) => {
                 noTopEmit()
             }
 
-            if(userstate["custom-reward-id"]==pureSkillRewardNum){
-                console.log(`Ya made it: ${pureSkillRewardNum}`)
-                    pureSkillEmit()
+        if(userstate["custom-reward-id"]==pureSkillRewardNum){
+            console.log(`Ya made it: ${pureSkillRewardNum}`)
+                pureSkillEmit()
+                }
+        
+        if(userstate["custom-reward-id"]==youNeededMe){
+            console.log(`Ya made it: ${youNeededMe}`)
+                youNeedMeEmit()
                 }
 
+        if(userstate["custom-reward-id"]==lurkerRewardNum){
+            console.log(`Ya made it: ${lurkerRewardNum}`)
+                lurkerEmit()
+                }
             
+        if(userstate["custom-reward-id"]==potionRewardNum){
+            console.log(`Ya made it: ${potionRewardNum}`)
+                potionEmit()
+                }
 
+        if(userstate["custom-reward-id"]==gpRewardNum){
+            console.log(`Ya made it: ${gpRewardNum}`)
+                gpRewardHandler(userstate)
+                }
+                    
             
 
         objMessage.messageBody = message
         objMessage.userState = userstate
 
-
+        if (message.charAt(0)==="1" && giveAwayActive && message.length===1){
+            console.log("Entry recorded")
+            contestEntryHandler(userstate)
+        }
 
         // look for command
         if (message.charAt(0) === "!") {
             // look for timer command
             
             if (message.split(' ')[0] === "!today") {
-                const firstArgument = message.split(' ')[1]
-                const secondArgument = message.split(' ')[2]
+                let firstArgument = message.split(' ')[1]
+                let secondArgument = message.split(' ')[2]
+                if (!firstArgument && !secondArgument){
+                    firstArgument = "na"
+                    secondArgument = "EveOnlyFans"
+                }
+                console.log(`
+                
+                
+                Recorded region as ${firstArgument}
+                
+                
+                `)
                 console.log(`!today command executed: Command: ${message.split(' ')[0]} Region: ${firstArgument} SummonerName: ${secondArgument}`)
                 todayCommand(firstArgument, secondArgument, message, channel);
             }
@@ -94,6 +133,22 @@ client.on('connected', (address, port) => {
             if (message.split(' ')[0] === "!rank") {
                 console.log(`!rank command executed`)
                 rankCommand(message, channel);
+            }
+
+            if (message.split(' ')[0] === "!spend"){
+                if (userstate.subscriber && giveAwayActive == true){
+                    console.log(`!spend command executed`)
+
+                    spendCheck(userstate,channel)
+                }
+                
+                else if (!userstate.subscriber)
+                {
+                    console.log("Someone who ain't a subscriber tried to spend gold!")
+                }
+                else if (giveAwayActive == false){
+                    console.log("Someone tried to spend gold outside a drawing!")
+                }
             }
             
             // if (message.split(' ')[0]=== "!spendyourgold"){
@@ -108,8 +163,36 @@ client.on('connected', (address, port) => {
         }
         if (self) return;
         if (message.toLowerCase() === '!hello') {
-            client.say(channel, `@${tags.username}, heya!`)
+            client.say(channel, `@${userstate.username}, heya!`)
         }
+
+        if (message.toLowerCase() === '!gpcheck') {
+            let gpResult = gpCheck(userstate, channel)
+            // return gpResult
+        }        
+        
+        if (message.toLowerCase() === '!giveawaydraw') {
+            beginGiveAway(userstate, channel)
+            // return gpResult
+        }
+
+        // if (message.split(' ')[0] === "!testing") {
+        //     console.log("Test command received. Sending test message to Rails...")
+        //     const userData = {"twitch_user": {"username": userstate.username}}
+            
+        //     const fetchConfig = { 
+        //         method: 'POST',
+        //         headers: { 
+        //         "Content-Type": "application/json",
+        //         "Accept": "application/json"},
+        //         "body": JSON.stringify(userData)
+        //         }
+        //     fetch("http://fresh-under-one-sky-email-api.herokuapp.com/twitch_user_check", fetchConfig)
+        //     .then(r=>r.json())
+        //     .then(r=>console.log(r))
+        // }
+
+
     })
     .on('subscription', (channel, username, method, message, userstate) => {
         console.log(`
@@ -201,7 +284,7 @@ const rankResponseHandler = (response) => {
 }
 
 const rankCommand = (message,channel) => {
-    fetch(`http://localhost:3001/api/v1/rank_lol/?summoner_name=EveOnlyFans&region=na`, {
+    fetch(`http://fresh-under-one-sky-email-api.herokuapp.com/api/v1/rank_lol/?summoner_name=EveOnlyFans&region=na`, {
         method: 'POST'
     })
         .then(r => r.text())
@@ -265,17 +348,26 @@ const socket = io('http://localhost:3000');
 // function to respond to !spendyourgold
 const goldSpend = () => {
     socket.emit('gold')
-    // resetGold()
 }
 
 const noTopEmit = () => {
     socket.emit('notop')
-    // resetGold()
 }
 
 const pureSkillEmit = () => {
     socket.emit('pureskill')
-    // resetGold()
+}
+
+const youNeedMeEmit = () => {
+    socket.emit('youneedme')
+}
+
+const potionEmit = () => {
+    socket.emit('potion')
+}
+
+const lurkerEmit = () => {
+    socket.emit('lurker')
 }
 
 const resetGold = () => {
@@ -288,4 +380,181 @@ const resetGold = () => {
 
     setTimeout(resetGoldState,15000)
     return 
+}
+
+const gpRewardHandler = (userstate) => {
+    console.log(userstate.username)
+    const userData = {"twitch_user": {"username": userstate.username}}
+            
+    const fetchConfig = { 
+        method: 'POST',
+        headers: { 
+        "Content-Type": "application/json",
+        "Accept": "application/json"},
+        "body": JSON.stringify(userData)
+        }
+    fetch("http://fresh-under-one-sky-email-api.herokuapp.com/twitch_user_add_gp", fetchConfig)
+    .then(r=>r.json())
+    .then(r=>console.log(r))
+
+    
+}
+
+const spendCheck = (userstate,channel) => {
+    console.log(userstate.username)
+    const userData = {"twitch_user": {"username": userstate.username}}
+            
+    const fetchConfig = { 
+        method: 'POST',
+        headers: { 
+        "Content-Type": "application/json",
+        "Accept": "application/json"},
+        "body": JSON.stringify(userData)
+    }
+
+    fetch("http://fresh-under-one-sky-email-api.herokuapp.com/twitch_user_gp_check", fetchConfig)
+    .then(r=>r.json())
+    .then(r=>{
+        console.log("results of gp check:", r)
+        if (r.gp>0){
+
+            if (userExpenditures.item && userExpenditures.item[userstate.username]){
+                if (userExpenditures.item[userstate.username].spent < 5){
+                console.log("This is userExpenditures!", userExpenditures)
+                userExpenditures.item[userstate.username].spent += 1
+                gpContestSpend(userstate,channel)
+                }
+                else {
+                    client.say(channel, `@${userstate.username}, you have already spent your daily limit of gp!`);
+                    return
+                }
+            }
+            else {
+                let item = {[userstate.username]:{spent: 1}}
+                userExpenditures = {...userExpenditures, item}
+                console.log("User Expensitures Array", userExpenditures)
+                gpContestSpend(userstate,channel)
+            }
+
+            }
+        
+        else {
+        client.say(channel, `@${userstate.username}, you do not currently have any gp to spend!`);
+        }
+    })
+
+}
+
+const gpCheck = (userstate, channel) => {
+    console.log(userstate.username)
+    const userData = {"twitch_user": {"username": userstate.username}}
+            
+    const fetchConfig = { 
+        method: 'POST',
+        headers: { 
+        "Content-Type": "application/json",
+        "Accept": "application/json"},
+        "body": JSON.stringify(userData)
+        }
+    fetch("http://fresh-under-one-sky-email-api.herokuapp.com/twitch_user_gp_check", fetchConfig)
+    .then(r=>r.json())
+    .then(r=>{
+        client.say(channel, `@${userstate.username}, you currently have ${r.gp?r.gp:0} gp.`);
+        
+    })
+
+    
+}
+
+const beginGiveAway = (userstate,channel) => {
+    if (userstate.username === "gamemasterthompson"){
+        client.action('gamemasterthompson','Giveaway has started!')
+        client.action('gamemasterthompson','For the next 60 seconds, you can type "1" in the chat to enter drawing for free RP!')
+        client.action('gamemasterthompson','Subscribers can type !spend <number> to use gp.')
+        client.action('gamemasterthompson', `Every gp spent counts as an additional entry for the giveaway. (Max 5 per day!)`);
+        client.action('gamemasterthompson', `If there are not ten separate participants, there will be no drawing! `);
+        giveAwayActive = true
+
+        setTimeout((userstate,channel)=>{
+            giveAwayActive = false
+            console.log(giveAwayEntriesArray)
+            client.action('gamemasterthompson', `Entry time has ended. Drawing will now commence.`);
+            contestDrawingHandler()
+        },20000)
+
+        
+    }
+    else {
+        client.say(channel, `Sorry, you don't have the authorization to use this command!`);
+    }
+    
+
+}
+
+const contestDrawingHandler = () => {
+    let winner = random_item(giveAwayEntriesArray)
+    console.log(`The winner is ${winner}`)
+    giveAwayEntriesArray = []
+    userExpenditures = {}
+}
+
+const gpContestSpend = (userstate, channel) => {
+    console.log(userstate.username)
+    const userData = {"twitch_user": {"username": userstate.username}}
+            
+    const fetchConfig = { 
+        method: 'POST',
+        headers: { 
+        "Content-Type": "application/json",
+        "Accept": "application/json"},
+        "body": JSON.stringify(userData)
+        }
+    fetch("http://fresh-under-one-sky-email-api.herokuapp.com/twitch_user_contest_gp_spend", fetchConfig)
+    .then(r=>r.json())
+    .then(r=>{
+        let user = userstate.username
+        giveAwayEntriesArray.push(user)
+        console.log("How much was spent?", userExpenditures.item[userstate.username].spent + 
+    "gp")
+        client.say(channel, `@${userstate.username} has thrown a gold coin toward the drawing!`);
+        
+    })
+
+    
+}
+
+const contestEntryHandler = (userstate) => {
+    const user = userstate.username
+    let valid = giveAwayEntriesArray.filter(item=>item==user)
+    if (valid.length == 0){
+        console.log("User not previously detected. User entered into drawing!")
+        giveAwayEntriesArray.push(user)
+    }
+    else {
+        console.log("User had already entered drawing and cannot do so again.")
+        return
+    }
+    // console.log("giveawayEntryHandler username:", userstate.username)
+    // const userData = {"twitch_user": {"username": userstate.username}}
+            
+    // const fetchConfig = { 
+    //     method: 'POST',
+    //     headers: { 
+    //     "Content-Type": "application/json",
+    //     "Accept": "application/json"},
+    //     "body": JSON.stringify(userData)
+    //     }
+    // fetch("http://fresh-under-one-sky-email-api.herokuapp.com/twitch_giveaway_entry", fetchConfig)
+    // .then(r=>r.json())
+    // .then(r=>{
+    //     client.say(channel, `Contest entry received.`);
+        
+    // })
+}
+
+function random_item(items)
+{
+  
+return items[Math.floor(Math.random()*items.length)];
+     
 }

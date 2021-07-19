@@ -24,11 +24,11 @@ main {
     position: absolute;
     height: 400;
     width: 800;
-    bottom: 150px;
-    left: 600px;
+    bottom: 55px;
+    left: 750px;
     /* background-color: #01a9ff; */
     color: white;
-    font-size: 60px;
+    font-size: 30px;
     font-family: 'Bebas Neue', cursive;
     padding-left: 20px;
     padding-right: 20px;

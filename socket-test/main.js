@@ -24,6 +24,24 @@ document.addEventListener("DOMContentLoaded",()=>{
         let villain = "./public/pureskill.webm"
         playVideo(villain,5500)    
     })
+
+    socket.on('youneedme',()=>{
+        console.log("Command received: YOU NEED ME")
+        let villain = "./public/youneedme.webm"
+        playVideo(villain,4100)    
+    })
+
+    socket.on('lurker',()=>{
+        console.log("Command received: Lurker!")
+        let villain = "./public/lurker01.webm"
+        playVideo(villain,5600)    
+    })
+
+    socket.on('potion',()=>{
+        console.log("Command received: Potion!")
+        let villain = "./public/potions.webm"
+        playVideo(villain,4600)    
+    })
 })
 
 const playVideo = (url,time) => {

@@ -46,6 +46,21 @@ io.on('connection', (socket) => {
       io.emit('pureskill')
     })
 
+    socket.on('youneedme',()=>{
+      console.log("Command 'youneedme' got to the server.")
+      io.emit('youneedme')
+    })
+
+    socket.on('potion',()=>{
+      console.log("Command 'potion' got to the server.")
+      io.emit('potion')
+    })
+
+    socket.on('lurker',()=>{
+      console.log("Command 'lurker' got to the server.")
+      io.emit('lurker')
+    })
+
   });
 
 server.listen(3000, () => {
