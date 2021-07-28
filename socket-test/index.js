@@ -61,6 +61,11 @@ io.on('connection', (socket) => {
       io.emit('lurker')
     })
 
+    socket.on('specialneeds',()=>{
+      console.log("Command 'specialneeds' got to the server.")
+      io.emit('specialneeds')
+    })
+
   });
 
 server.listen(3000, () => {

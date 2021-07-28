@@ -42,6 +42,12 @@ document.addEventListener("DOMContentLoaded",()=>{
         let villain = "./public/potions.webm"
         playVideo(villain,4600)    
     })
+
+    socket.on('specialneeds',()=>{
+        console.log("Command received: Special needs!")
+        let villain = "./public/darthfrodious.webm"
+        playVideo(villain,4500)  
+    })
 })
 
 const playVideo = (url,time) => {
