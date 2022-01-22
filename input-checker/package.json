@@ -13,6 +13,6 @@
     "express": "^4.17.1",
     "global-keys": "^1.0.3",
     "input-event": "^1.2.6",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^3.1.1"
   }
 }
