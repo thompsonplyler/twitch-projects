@@ -11,6 +11,6 @@
   "dependencies": {
     "express": "^4.17.1",
     "nodemon": "^2.0.7",
-    "three": "^0.129.0"
+    "three": "^0.137.0"
   }
 }
