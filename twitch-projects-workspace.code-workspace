@@ -5,7 +5,12 @@
 		},
 		{
 			"path": "../../../../../../home/thompson/code/projects/overland/backend-lol-mastery-app"
+		},
+		{
+			"path": "../../../../../../home/thompson/code/projects/personal/twitch_omega"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "twitch-projects"
+	}
 }

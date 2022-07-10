@@ -5,11 +5,11 @@ let loss = document.getElementById("loss")
 // sc6Words.innerText = `If you're into SoulCalibur 6,\n let me know,\ngive me a follow,\n and let's play in between rounds of League!`
 // pf2Words.innerText = `Wednesday nights I stream Pathfinder.\n\n It's like D&D, but even nerdier.\n\n 8pm after normal stream, usually.`
 // pf2Words.innerText = `I usually stream Pathfinder on Wed nights.\nBut not tomorrow. \n It's like D&D, but even nerdier.\n 8pm after normal stream, usually.`
-const minutes = 60
+const minutes = 1
 let winTotal = 0
 let lossTotal = 0
 
-tl = new TimelineLite({ repeat: -1, repeatDelay: minutes * 3 })
+tl = new TimelineLite({ repeat: -1, repeatDelay: minutes * 2 })
 
 // tl.addLabel("display", 5)
 tl.set(".pet-pet1", { x: -4500 })

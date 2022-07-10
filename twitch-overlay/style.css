@@ -60,8 +60,8 @@ main {
     top: 100px;
     right: 0px;
     border-style: solid;
-    border-width: 5px;
-    border-color: #01a9ff;
+    border-width: 1px;
+    border-color: #000;
     color: white;
     font-size: 28px;
     font-family: 'Bebas Neue', cursive;
@@ -70,7 +70,7 @@ main {
     padding-top: 75px;
     padding-bottom: 20px;
     text-shadow: 2px 2px 8px black;
-    /* box-shadow: 3px 3px 3px 3px black; */
+    box-shadow: 3px 3px 3px 3px black;
     text-align: end;
     text-justify: auto;
     align-content: flex-end;
