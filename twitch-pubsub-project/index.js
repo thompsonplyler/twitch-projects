@@ -16,6 +16,7 @@ const options = {
     cluster: "aws",
     reconnect: true,
   },
+
   identity: {
     username: "PubSubBot",
     password: `${process.env.PUBSUBPASSWORD}`,
@@ -47,23 +48,6 @@ const objMessage = { userState: "", messageBody: "" };
 // tmi client that connects to the channel
 const client = new tmi.Client(options);
 client.connect();
-
-client.on("message", (channel, tags, message, self) => {
-  // This will tell the bot to ignore echoed messages.
-  if (self) return;
-
-  if (message.toLowerCase() === "!marco") {
-    let thing = basicFetch();
-  }
-});
-
-const basicFetch = async (channel) => {
-  const url = `https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/EveOnlyFans?api_key=${process.env.API_KEY}`;
-
-  let result = await fetch(url);
-  result = await result.text();
-  console.log(result);
-};
 
 // verify connection
 client

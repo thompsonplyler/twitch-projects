@@ -1,71 +1,31 @@
-@import url('https://fonts.googleapis.com/css?family=Bebas+Neue&display=swap');
 @font-face {
-    font-family: "Detective Inc";
-    src: url('detectivesinc.ttf')
+    font-family: 'Arcade';
+    src: url('ARCADE_I.TTF') format('truetype');
 }
 
-*, *:before, *:after {
-    margin: 0;
-    padding: 0;
 
-    -webkit-box-sizing: border-box !important;
-       -moz-box-sizing: border-box !important;
-        -ms-box-sizing: border-box !important;
-            box-sizing: border-box !important;
-}
 
 body {
-    background-color: rgba(0,0,0,0);
+    background-color: rgba(0, 0, 0, 0);
     overflow: hidden;
-    width: 1920px;
-    max-height: 1080px;
 }
 
-main { 
-}
-
-#announcement {
+#container {
+    display: grid;
+    grid-template: 1fr/1fr;
     height: 100vh;
-    width: 100%; /** To match container and align all the way right */
-    text-align: left;
-    font-size: 12px;
-    color: white;
-    font-family: Arial, Helvetica, sans-serif; /** Viewable on both white and black background */
-    background-color: #01a9ff
+    align-items: center;
 }
 
-.countdown {
-    padding: 10px 20px;
-}
-
-.thing {
-    position: absolute;
-    height: 400;
-    width: 800;
-    bottom: 100px;
-    left: 0px;
-    background-color: #01a9ff;
-    color: white;
-    font-size: 60px;
-    font-family: 'Bebas Neue', cursive;
-    padding-left: 20px;
-    padding-right: 20px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    box-shadow: 2px 2px 2px 2px black;
-}
 #moment {
-    position: absolute;
-    width: 1920px;
-    height: 1080px;
+    position: relative;
     color: white;
-    top: 7.5%;
-    left: 7.5%;
-    font-size: 350px;
-    font-family: 'Detective Inc';
-    padding-left: 20px;
-    padding-right: 20px;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    background-color: blue;
+    justify-self: center;
+    font-size: 100px;
+    font-family: 'Arcade', 'Oswald';
+    /* Arcade will be used if available, otherwise Oswald */
     text-shadow: 2px 2px 5px black;
+    bottom: 200px;
+    left: 25px;
 }
