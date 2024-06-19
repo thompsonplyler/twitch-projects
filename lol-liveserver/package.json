@@ -17,6 +17,6 @@
     "node-fetch": "^2.6.1",
     "pem": "^1.14.4",
     "request": "^2.88.2",
-    "socket.io-client": "^4.4.1"
+    "socket.io-client": "^4.7.5"
   }
 }
