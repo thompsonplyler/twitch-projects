@@ -161,7 +161,7 @@ io.on("connection", (socket) => {
 
   socket.on("rabadon", () => {
     console.log("Command 'rabadon' got to the server.");
-    // io.emit("rabadon");
+    io.emit("rabadon");
   });
 
   socket.on("hextech", () => {
@@ -231,10 +231,117 @@ io.on("connection", (socket) => {
     io.emit("getVoidStaff");
   });
 
+  socket.on("lichbane", () => {
+    console.log("Command 'lichbane' got to the server.");
+    io.emit("lichbane");
+  });
 
+  socket.on("zhonyas", () => {
+    console.log("Command 'zhonyas' got to the server.");
+    io.emit("zhonyas");
+  });
 
+  socket.on("voidstaff", () => {
+    console.log("Command 'voidstaff' got to the server.");
+    io.emit("voidstaff");
+  });
 
+  socket.on('redWardPurchased', () => { io.emit('redWardPurchased') });
+  socket.on('redWardPlaced', () => { io.emit('redWardPlaced') })
 
+  // Handle gold and related events
+  socket.on("goldThresholdHit", () => {
+    console.log("Command 'goldThresholdHit' got to the server.");
+    io.emit("goldThresholdHit");
+  });
+
+  socket.on("goldThresholdRepeat", () => {
+    console.log("Command 'goldThresholdRepeat' got to the server.");
+    io.emit("goldThresholdRepeat");
+  });
+
+  socket.on("delayedAffordabilityWarning", () => {
+    console.log("Command 'delayedAffordabilityWarning' got to the server.");
+    io.emit("delayedAffordabilityWarning");
+  });
+  // End handle gold and related events
+
+  socket.on("villain", () => {
+    console.log("Command 'villain' got to the server.");
+    // io.emit("villain");
+  });
+
+  socket.on("notop", () => {
+    console.log("Command 'notop' got to the server.");
+    io.emit("notop");
+  });
+
+  socket.on("pureskill", () => {
+    console.log("Command 'pureskill' got to the server.");
+    io.emit("pureskill");
+  });
+
+  socket.on("youneedme", () => {
+    console.log("Command 'youneedme' got to the server.");
+    io.emit("youneedme");
+  });
+
+  socket.on("potion", () => {
+    console.log("Command 'potion' got to the server.");
+    io.emit("potion");
+  });
+
+  socket.on("lurker", () => {
+    console.log("Command 'lurker' got to the server.");
+    io.emit("lurker");
+  });
+
+  socket.on("specialneeds", () => {
+    console.log("Command 'specialneeds' got to the server.");
+    io.emit("specialneeds");
+  });
+
+  socket.on("champWardPurchased", async (champ) => {
+    console.log("command 'champWardPurchased' got to the server.", "Champ: ", champ);
+    handleChampWardPurchased(champ);
+    io.emit("champWardPurchased", champ);
+  });
+
+  socket.on("champWardPlaced", async (champ) => {
+    console.log("command 'champWardPlaced' got to the server.", "Champ: ", champ)
+    handleChampWardPlaced(champ);
+    io.emit("champWardPlaced", champ);
+  });
+
+  socket.on("getRabadons", async (socket) => {
+    // io.emit("getRabadons");
+  });
+
+  socket.on("getLichBane", async (socket) => {
+    console.log("Lich Bane alert sent!")
+    io.emit("getLichBane");
+  });
+  socket.on("getZhonyas", async (socket) => {
+    io.emit("getZhonyas");
+  });
+  socket.on("getVoidStaff", async (socket) => {
+    io.emit("getVoidStaff");
+  });
+
+  socket.on("lichbane", () => {
+    console.log("Command 'lichbane' got to the server.");
+    io.emit("lichbane");
+  });
+
+  socket.on("zhonyas", () => {
+    console.log("Command 'zhonyas' got to the server.");
+    io.emit("zhonyas");
+  });
+
+  socket.on("voidstaff", () => {
+    console.log("Command 'voidstaff' got to the server.");
+    io.emit("voidstaff");
+  });
 
   socket.on('redWardPurchased', () => { io.emit('redWardPurchased') });
   socket.on('redWardPlaced', () => { io.emit('redWardPlaced') })

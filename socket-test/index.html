@@ -1,22 +1,25 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Socket.IO Twitch Media Player</title>
-    <link type="text/css" rel="stylesheet" href="./public/style.css" />
-  </head>
-  <body>
-    <div id="video-div" class="hidden-video">
-      <video autoplay="true" loop="true" id="video">
-        <source src="" type="video/webm" />
-      </video>
-    </div>
 
-    <script
-      src="https://cdn.socket.io/4.4.1/socket.io.min.js"
-      integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H"
-      crossorigin="anonymous"
-    ></script>
+<head>
+  <title>Socket.IO Twitch Media Player</title>
+  <link type="text/css" rel="stylesheet" href="./public/style.css" />
+</head>
 
-    <script src="main.js"></script>
-  </body>
+<body>
+  <button id="activate-audio" style="position: absolute; top: 10px; left: 10px; z-index: 100;">Activate Audio</button>
+
+  <div id="video-div" class="hidden-video">
+    <video autoplay="true" loop="true" id="video">
+      <source src="" type="video/webm" />
+    </video>
+  </div>
+
+  <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"
+    integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H"
+    crossorigin="anonymous"></script>
+
+  <script src="main.js"></script>
+</body>
+
 </html>

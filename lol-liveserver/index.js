@@ -16,19 +16,19 @@ process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
 
 const remote_host = "https://127.0.0.1:2999";
 
-const mySummonerName = "FinalBossEvelynn";
+const mySummonerName = "ClimateChange";
 
 const url = {
   playerListURL: `${remote_host}/liveclientdata/playerlist`,
   eventConfigURL: `${remote_host}/liveclientdata/eventdata`,
   playerAbilitiesURL: `${remote_host}/liveclientdata/activeplayerabilities`,
-  playerItemsURL: `${remote_host}/liveclientdata/playeritems?riotId=FinalBossEvelynn#NA1`,
+  playerItemsURL: `${remote_host}/liveclientdata/playeritems?riotId=${mySummonerName}#NA1`,
   activePlayerURL: `${remote_host}/liveclientdata/activeplayer`,
   allGameDataURL: `${remote_host}/liveclientdata/allgamedata`,
   gameStatsURL: `${remote_host}/liveclientdata/gamestats`,
 };
 
-const goldThreshold = 1250;
+const goldThreshold = 3000;
 
 const state = {
   gameStarted: false,
@@ -45,6 +45,10 @@ const state = {
   overLichBaneTime: 0,
   overZhonyasTime: 0,
   overVoidStaffTime: 0,
+  affordabilityNotificationPlayed: false,
+  goldThresholdHitFired: false,
+  lastIcarusTime: 0,
+  lastIdiotTime: 0,
   currentLevel: 1,
   futuresMarket: true,
   debtLimit: 0,
@@ -107,12 +111,16 @@ setInterval(async () => {
     state.gotHextech = false;
     state.gotLichbane = false;
     state.gotZhonyas = false;
-    state.gotVoidStaff = false
+    state.gotVoidStaff = false;
     state.overMoneyTime = 0;
     state.overRabadonsTime = 0;
     state.overLichBaneTime = 0;
     state.overZhonyasTime = 0;
     state.overVoidStaffTime = 0;
+    state.affordabilityNotificationPlayed = false;
+    state.goldThresholdHitFired = false;
+    state.lastIcarusTime = 0;
+    state.lastIdiotTime = 0;
     state.currentLevel = 1;
     state.futuresMarket = false;
     state.debtLimit = 0;
@@ -179,7 +187,7 @@ async function init() {
     let eveCheck;
     if (data.allPlayers) {
 
-      eveCheck = data.allPlayers.filter((playerData) => playerData.riotIdGameName == "FinalBossEvelynn");
+      eveCheck = data.allPlayers.filter((playerData) => playerData.riotIdGameName == mySummonerName)
 
       /**
        * Sample playerdata object:
@@ -484,68 +492,82 @@ async function init() {
 
     const getVoidStaff = hasVoidStaffComponents(itemResponse)
 
-    // past the gold threshold for the first time, play the sound
-    if (actualGold > goldThreshold && state.overMoneyTime == 0 && currentPlayer[0].items.length < 6) {
-      console.log("Sent a gold notification!");
-      state.overMoneyTime = gameTime;
-      socket.emit("gold");
-    }
-    // if past the threshold and it's been 30 seconds.
-    if (actualGold > goldThreshold && gameTime - state.overMoneyTime > 30 && currentPlayer[0].items.length < 6) {
-      socket.emit("gold");
-      state.overMoneyTime = gameTime;
+    // === Gold Logic ===
+    const isGoldHigh = actualGold > goldThreshold;
+
+    // 1. Initial Icarus Song (Gold > 3000 first time)
+    if (isGoldHigh && !state.goldThresholdHitFired && currentPlayer[0].items.length < 6) {
+      console.log("Gold > 3000 first time. Emitting goldThresholdHit (Icarus).");
+      state.goldThresholdHitFired = true;
+      state.lastIcarusTime = gameTime; // Start Icarus repeat timer base
+      socket.emit("goldThresholdHit");
     }
 
+    // 2. Repeating Icarus Song (Gold > 3000 repeat)
+    if (isGoldHigh && state.goldThresholdHitFired && gameTime - state.lastIcarusTime >= 30 && currentPlayer[0].items.length < 6) {
+      console.log("Gold > 3000 repeat. Emitting goldThresholdRepeat (Icarus).");
+      state.lastIcarusTime = gameTime; // Reset Icarus repeat timer
+      socket.emit("goldThresholdRepeat");
+    }
+
+    // 3. Repeating Idiot Song (Gold < 3000 BUT item affordable)
+    const isAnyItemCurrentlyAffordable = (getRabadons || getLichBane || getZhonyas || getVoidStaff);
+    // Only trigger if gold is NOT high AND at least one item is CURRENTLY affordable
+    if (!isGoldHigh && isAnyItemCurrentlyAffordable && gameTime - state.lastIdiotTime >= 30 && currentPlayer[0].items.length < 6) {
+      // Need to start the timer the first time this condition is met after an item *ever* became affordable
+      if (state.lastIdiotTime === 0 && state.affordabilityNotificationPlayed) {
+        console.log("Starting Idiot Song timer (Gold < 3k, item affordable now, first time check).");
+        state.lastIdiotTime = gameTime;
+      } else if (state.lastIdiotTime > 0) { // Timer was already running
+        console.log("Gold < 3000 repeat, item still affordable. Emitting delayedAffordabilityWarning (Idiot).");
+        state.lastIdiotTime = gameTime; // Reset Idiot repeat timer
+        socket.emit("delayedAffordabilityWarning");
+      }
+    }
+    // === End Gold Logic ===
+
+    // === Item Affordability Logic ===
     if (getRabadons && state.overRabadonsTime == 0) {
       state.overRabadonsTime = gameTime
       socket.emit("getRabadons")
+      state.affordabilityNotificationPlayed = true;
       console.log("You can afford your Rabadon's")
-    }
-
-    if (getRabadons && gameTime - state.overRabadonsTime > 30) {
-      console.log("You can afford your Rabadon's")
-      socket.emit("getRabadons")
-      state.overRabadonsTime = gameTime
     }
 
     if (getLichBane && state.overLichBaneTime == 0) {
       state.overLichBaneTime = gameTime
       socket.emit("getLichBane")
+      state.affordabilityNotificationPlayed = true;
       console.log("You can afford your Lich Bane")
-    }
-
-    if (getLichBane && gameTime - state.overLichBaneTime > 30) {
-      console.log("You can afford your Lich Bane")
-      socket.emit("getLichBane")
-      state.overLichBaneTime = gameTime
     }
 
     if (getZhonyas && state.overZhonyasTime == 0) {
       state.overZhonyasTime = gameTime
       socket.emit("getZhonyas")
+      state.affordabilityNotificationPlayed = true;
       console.log("You can afford your Zhonyas")
-    }
-
-    if (getZhonyas && gameTime - state.overZhonyasTime > 30) {
-      console.log("You can afford your Zhonyas")
-      socket.emit("getZhonyas")
-      state.overZhonyasTime = gameTime
     }
 
     if (getVoidStaff && state.overVoidStaffTime == 0) {
       state.overVoidStaffTime = gameTime
       socket.emit("getVoidStaff")
+      state.affordabilityNotificationPlayed = true;
       console.log("You can afford your Void Staff")
     }
 
-    if (getVoidStaff && gameTime - state.overVoidStaffTime > 30) {
-      socket.emit("getVoidStaff")
-      console.log("You can afford your Void Staff")
-      state.overVoidStaffTime = gameTime
+    // === End Item Affordability Logic ===
+
+    // Reset timers if conditions no longer met
+    if (!isGoldHigh && state.lastIcarusTime > 0) {
+      // If gold drops below threshold, stop the Icarus repeat timer.
+      console.log("Gold dropped below threshold, resetting Icarus timer.");
+      state.lastIcarusTime = 0;
+      // Reset Idiot timer if no item is currently affordable OR if affordability was never triggered
+      if ((!isAnyItemCurrentlyAffordable || !state.affordabilityNotificationPlayed) && state.lastIdiotTime > 0) {
+        console.log("No item currently affordable or initial affordability never met, resetting Idiot timer.");
+        state.lastIdiotTime = 0;
+      }
     }
-
-
-
 
     // if UNDER the threshold, and but we've gone back...
     if (actualGold < 1250 && state.overMoneyTime > 0) {
@@ -553,18 +575,22 @@ async function init() {
     }
 
     const eventResponse = await hitLocalAPI(url.eventConfigURL);
-    eventResponse.Events.forEach((event) => {
-      if (state.gameEnded == false && event.EventName == "GameEnd") {
-        state.gameEnded = true;
-        state.status = 400;
-        console.log("The game has ended.");
-      }
+    if (eventResponse.Events != undefined)
+      eventResponse.Events.forEach((event) => {
+        if (state.gameEnded == false && event.EventName == "GameEnd") {
+          state.gameEnded = true;
+          state.status = 400;
+          console.log("The game has ended.");
+        }
 
-      if (state.gameStarted == false && event.EventName == "GameStart") {
-        state.gameStarted = true;
-        console.log("The game has started.");
-      }
-    });
+        if (state.gameStarted == false && event.EventName == "GameStart") {
+          state.gameStarted = true;
+          console.log("The game has started.");
+        }
+      });
+    else {
+      init()
+    }
 
     // needlessly large itemID == 1058
     // rabadon's itemID = 3089
