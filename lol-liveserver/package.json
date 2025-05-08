@@ -12,7 +12,7 @@
     "axios": "^0.25.0",
     "child_process": "^1.0.2",
     "cors": "^2.8.5",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "global-keys": "^1.0.3",
     "node-fetch": "^2.6.1",
     "pem": "^1.14.4",
